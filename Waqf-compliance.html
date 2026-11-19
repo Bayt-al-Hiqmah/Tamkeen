@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waqf Governance &amp; Regulatory Compliance | Al-Tamkeen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Cinzel"', 'serif'],
+                        arabic: ['"Amiri"', 'serif'],
+                    },
+                    colors: {
+                        obsidian: '#070B14',
+                        navycard: '#0E1525',
+                        gold: {
+                            400: '#FBBF24',
+                            500: '#D4AF37',
+                            600: '#B49020',
+                        },
+                        emerald: {
+                            400: '#34D399',
+                            500: '#10B981',
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #070B14;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 45%);
+            color: #E2E8F0;
+        }
+        .glass-panel {
+            background: rgba(14, 21, 37, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-gold-500/30 selection:text-gold-400">
+
+    <!-- Top Navigation Bar -->
+    <nav class="sticky top-0 z-50 glass-panel border-b border-gold-500/20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <a href="index.html" class="inline-flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-gold-400 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                <span>Back to Platform</span>
+            </a>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 text-xs font-semibold tracking-wider uppercase rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/30">
+                    Civic &amp; Governance Module
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+
+        <!-- Hero Header -->
+        <header class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+            <div class="absolute top-0 right-0 w-40 h-40 bg-gold-500/5 rounded-bl-full pointer-events-none"></div>
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+                <span class="text-xs font-semibold uppercase tracking-widest text-emerald-400">Mauritian Statutory Framework</span>
+                <span class="text-slate-600">•</span>
+                <span class="text-xs font-medium text-slate-400">Waqf Act 1941 &amp; AML/CFT Compliance</span>
+            </div>
+            <h1 class="font-serif text-2xl sm:text-4xl font-bold text-white leading-tight mb-4">
+                Mosque Financial Governance &amp; Regulatory Compliance
+            </h1>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                Unmonitored private collections inside a registered mosque create a serious regulatory breach under Mauritian law. Even when an individual acts with genuine intentions—such as collecting funds for a local <em class="text-gold-400 font-medium">madrassa</em>—bypassing official oversight violates statutory trust protocols.
+            </p>
+            <div class="mt-5 p-4 rounded-xl bg-slate-900/80 border-l-4 border-gold-500 text-sm text-slate-300 leading-relaxed">
+                Under the <strong class="text-white">Waqf Act 1941</strong>, a mosque is a registered public endowment regulated by the <a href="https://lawsofmauritius.govmu.org/portal/viewlegislationdocument/web/?doctitle=V2FxZiBBY3Q%3D&docnumber&doctype=act" target="_blank" rel="noopener noreferrer" class="text-gold-400 underline decoration-gold-500/50 hover:text-gold-300 font-medium">Board of Waqf Commissioners</a>. It is not an informal space where private citizens can operate unmonitored collection streams.
+            </div>
+        </header>
+
+        <!-- Section 1: Why This Setup is a Severe Legal Breach -->
+        <section class="space-y-4">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Why Unmonitored Collection is a Severe Legal Breach</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Card 1 -->
+                <div class="glass-panel rounded-xl p-5 flex flex-col justify-between hover:border-gold-500/40 transition-colors">
+                    <div>
+                        <span class="inline-block text-xs font-bold text-gold-400 mb-2">01 / AUTHORIZATION</span>
+                        <h3 class="text-base font-bold text-white mb-2">Unauthorised Public Collection</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            No individual is legally permitted to collect money from the public on behalf of an Islamic cause inside a mosque without explicit authorization from the official management committee (<em class="text-gold-300">Mutawalli</em>) and registration with the Waqf Board.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-panel rounded-xl p-5 flex flex-col justify-between hover:border-gold-500/40 transition-colors">
+                    <div>
+                        <span class="inline-block text-xs font-bold text-gold-400 mb-2">02 / CUSTODY CONTROLS</span>
+                        <h3 class="text-base font-bold text-white mb-2">Absence of Dual-Custody Controls</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Compliant donation boxes must be physically secure, fitted with separate locks, and opened under multi-person verification. An unlocked cardboard container opened alone by one person circumvents mandatory audit safeguards.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-panel rounded-xl p-5 flex flex-col justify-between hover:border-gold-500/40 transition-colors">
+                    <div>
+                        <span class="inline-block text-xs font-bold text-gold-400 mb-2">03 / AML &amp; AUDIT TRAIL</span>
+                        <h3 class="text-base font-bold text-white mb-2">Failure of Bookkeeping &amp; AML Laws</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Removing cash in private leaves zero paper trail. Under Mauritius’s <strong class="text-slate-100">AML/CFT</strong> updates to the Waqf Act, management committees face heavy statutory liability for allowing untracked cash to exit the premises.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Immediate Legal Risk to the Mosque Committee -->
+        <section class="glass-panel rounded-2xl p-6 sm:p-8 border-red-500/25 space-y-5">
+            <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 shrink-0 mt-0.5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
+                <div>
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Immediate Legal Risk to the Mosque Committee</h2>
+                    <p class="text-sm text-slate-300 mt-1">
+                        During a spot check by the <strong class="text-white">Financial Crimes Commission (FCC)</strong> or an auditor from the Waqf Board, an unsecured collection box triggers severe liability—<span class="text-red-300 font-semibold">not only for the collector, but directly for the mosque managers</span>:
+                    </p>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex items-start gap-3.5">
+                    <span class="w-2 h-2 rounded-full bg-red-400 mt-2 shrink-0"></span>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-bold text-white">Gross Negligence</h3>
+                        <p class="text-sm text-slate-300 mt-0.5 leading-relaxed">
+                            The mosque management committee can be charged with failing in its fiduciary duty to safeguard public trust assets.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex items-start gap-3.5">
+                    <span class="w-2 h-2 rounded-full bg-red-400 mt-2 shrink-0"></span>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-bold text-white">The "Slush Fund" Supposition</h3>
+                        <p class="text-sm text-slate-300 mt-0.5 leading-relaxed">
+                            Regulators do not treat unrecorded boxes as informal charity. Authorities treat untracked cash streams as potential unrecorded slush funds or illicit avenues bypassing reporting to the <strong class="text-slate-100">Mauritius Revenue Authority (MRA)</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex items-start gap-3.5">
+                    <span class="w-2 h-2 rounded-full bg-red-400 mt-2 shrink-0"></span>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-bold text-white">Forced Administrative Suspension</h3>
+                        <p class="text-sm text-slate-300 mt-0.5 leading-relaxed">
+                            The Board of Waqf Commissioners holds explicit statutory authority to temporarily dismantle or replace a mosque's administration if unauthorized public collections are permitted to continue.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Actionable Remediation Roadmap (Interactive Accordions) -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Recommended Remediation Steps</h2>
+                        <p class="text-xs sm:text-sm text-slate-400">Structured governance steps to protect the congregation and committee</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3" id="action-accordion">
+                <!-- Step 1 -->
+                <div class="accordion-item active glass-panel rounded-xl overflow-hidden border border-emerald-500/30">
+                    <button type="button" onclick="toggleAccordion(this)" class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-400 font-bold text-xs">STEP 1</span>
+                            <span class="font-bold text-white text-sm sm:text-base">Alert the Management Committee Privately</span>
+                        </div>
+                        <svg class="accordion-icon w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-5 pb-5 pt-1 text-sm text-slate-300 leading-relaxed border-t border-slate-800/80">
+                            Inform the <em class="text-gold-400 font-medium">Mutawalli</em> or mosque secretary immediately and discreetly. Clarify that permitting unmonitored collections exposes the committee personally and institutionally to statutory penalties, FCC scrutiny, and regulatory audits.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="accordion-item active glass-panel rounded-xl overflow-hidden border border-emerald-500/30">
+                    <button type="button" onclick="toggleAccordion(this)" class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-400 font-bold text-xs">STEP 2</span>
+                            <span class="font-bold text-white text-sm sm:text-base">Implement Mandatory Dual-Custody Counting</span>
+                        </div>
+                        <svg class="accordion-icon w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-5 pb-5 pt-1 text-sm text-slate-300 leading-relaxed border-t border-slate-800/80">
+                            If the collection is legitimately intended for a <em class="text-gold-400">madrassa</em>, absorb the fundraising into the mosque's official accounting framework. Replace any unsecured cardboard box with a locked safe, and require at least two committee members to open and count the proceeds together using a signed, dated log sheet.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="accordion-item active glass-panel rounded-xl overflow-hidden border border-emerald-500/30">
+                    <button type="button" onclick="toggleAccordion(this)" class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-400 font-bold text-xs">STEP 3</span>
+                            <span class="font-bold text-white text-sm sm:text-base">Escalate to the Waqf Board if Ignored</span>
+                        </div>
+                        <svg class="accordion-icon w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-5 pb-5 pt-1 text-sm text-slate-300 leading-relaxed border-t border-slate-800/80">
+                            If the mosque management is alerted to the breach yet deliberately chooses not to act, any member of the local congregation holds the legal right to submit a formal inquiry or complaint to the <strong class="text-white">Board of Waqf Commissioners</strong> to safeguard the integrity of the endowment.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legal References & Sources Footer -->
+        <footer class="glass-panel rounded-2xl p-6 space-y-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-gold-400">Statutory &amp; Reference Sources</h3>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-300">
+                <li>
+                    <a href="https://lawsofmauritius.govmu.org/portal/viewlegislationdocument/web/?doctitle=V2FxZiBBY3Q%3D&docnumber&doctype=act" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-gold-500/40 transition-all">
+                        <span class="text-gold-400 font-bold">[Law]</span>
+                        <span class="truncate">Waqf Act 1941 — Laws of Mauritius Portal</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://lexpress.mu/s/concilier-tradition-et-transparence-560305" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-gold-500/40 transition-all">
+                        <span class="text-gold-400 font-bold">[1]</span>
+                        <span class="truncate">L'Express — Concilier tradition et transparence</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.facebook.com/shakeelmohamed.info/posts/i-attended-the-international-waqf-conference-mauritius-organised-by-awqaf-maurit/1631403655011330/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-gold-500/40 transition-all">
+                        <span class="text-gold-400 font-bold">[2]</span>
+                        <span class="truncate">International Waqf Conference Mauritius Briefing</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.scribd.com/document/864367470/Unit-4-mutawali" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-gold-500/40 transition-all">
+                        <span class="text-gold-400 font-bold">[3]</span>
+                        <span class="truncate">Mutawalli Duties &amp; Governance Framework</span>
+                    </a>
+                </li>
+                <li class="sm:col-span-2">
+                    <a href="https://www.facebook.com/informus.mu/posts/waqf-act-les-pr%C3%A9cisions-de-shakeel-mohamed/122283850976162269/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-gold-500/40 transition-all">
+                        <span class="text-gold-400 font-bold">[4]</span>
+                        <span class="truncate">Informus.mu — Waqf Act &amp; AML/CFT Clarifications</span>
+                    </a>
+                </li>
+            </ul>
+        </footer>
+
+    </main>
+
+    <script>
+        function toggleAccordion(button) {
+            const item = button.closest('.accordion-item');
+            item.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
