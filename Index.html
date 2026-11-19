@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Al-Tamkeen | Empowering Mauritian Muslims</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,26 +12,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        .content-toggle-zone {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 330ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease;
-            opacity: 0;
+        :root {
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
-        .content-toggle-zone.expanded {
-            grid-template-rows: 1fr;
-            opacity: 1;
+
+        /* Hide default scrollbars on horizontal tracks while preserving inertia */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        .content-inner {
-            overflow: hidden;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         .premium-scrollbar::-webkit-scrollbar,
@@ -56,6 +48,7 @@
 
         /* Top Nav & Dynamic Section Banner Slide Transitions */
         #main-nav {
+            padding-top: var(--safe-top);
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         #main-nav.nav-hidden {
@@ -63,82 +56,137 @@
         }
 
         #section-status-banner {
-            transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding-top 0.35s ease;
+        }
+        body.tier-mode #section-status-banner {
+            padding-top: var(--safe-top);
         }
 
-        /* Compact Lifeline Nodes for Top Nav */
+        /* Active & Completed Lifeline Nodes */
+        @keyframes pulseGoldRing {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.45), 0 0 12px rgba(212, 175, 55, 0.35); }
+            50% { box-shadow: 0 0 0 5px rgba(212, 175, 55, 0), 0 0 16px rgba(212, 175, 55, 0.55); }
+        }
+
         .lifeline-node {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 10px;
             font-family: monospace;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1.5px solid rgba(255, 255, 255, 0.16);
             background: #0b1329;
             color: #64748b;
+            position: relative;
+            touch-action: manipulation;
+        }
+        @media (min-width: 640px) {
+            .lifeline-node {
+                width: 30px;
+                height: 30px;
+                font-size: 11px;
+            }
+        }
+        .lifeline-node.unlocked:not(.active):not(.completed) {
+            border-color: rgba(212, 175, 55, 0.45);
+            color: #e2e8f0;
+            background: rgba(15, 23, 42, 0.95);
         }
         .lifeline-node.active {
             border-color: #d4af37;
-            color: #d4af37;
-            background: rgba(212, 175, 55, 0.15);
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
-            transform: scale(1.1);
+            color: #0b1329;
+            background: linear-gradient(135deg, #f4ebd0, #d4af37);
+            transform: scale(1.14);
+            animation: pulseGoldRing 2.4s infinite ease-in-out;
         }
         .lifeline-node.completed {
             border-color: #10b981;
             color: #10b981;
-            background: rgba(16, 185, 129, 0.15);
+            background: rgba(16, 185, 129, 0.16);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
+        }
+        .lifeline-node.completed::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 9999px;
+            background: #10b981;
+            color: #0b1329;
+            font-size: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #0b1329;
         }
 
-        /* Sticky Headers: Tightly snapped right beneath the status banner */
+        /* Sticky Headers: Snapped beneath status banner */
         .sticky-section-header {
             position: sticky;
-            top: 84px;
+            top: calc(86px + var(--safe-top));
             z-index: 30;
             background-color: rgba(11, 19, 41, 0.96);
             backdrop-filter: blur(12px);
             transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        /* When inside Tiers 01-04 (Top Nav hidden, Banner at top: 0px) */
         body.tier-mode .sticky-section-header {
-            top: 36px;
+            top: calc(38px + var(--safe-top));
         }
 
         .sticky-card-header {
             position: sticky;
-            top: 142px;
+            top: calc(144px + var(--safe-top));
             z-index: 25;
             background-color: rgba(15, 23, 42, 0.96);
             backdrop-filter: blur(8px);
             transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         body.tier-mode .sticky-card-header {
-            top: 94px;
+            top: calc(96px + var(--safe-top));
         }
 
-        /* GATED TIER VISIBILITY */
+        /* Smooth Tier Panel Transitions */
+        @keyframes tierPanelEnter {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(0.992);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         .tier-section {
             display: none;
-            opacity: 0;
-            transform: translateY(12px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .tier-section.active-tier {
             display: block;
-            opacity: 1;
-            transform: translateY(0);
+            animation: tierPanelEnter 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Tactile Locked Card Shake */
+        @keyframes cardShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        .animate-shake {
+            animation: cardShake 0.36s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
         }
 
         /* Sidebar Active State */
         aside nav button.active, #mobile-toc-drawer nav button.active {
-            background: rgba(212, 175, 55, 0.1);
+            background: rgba(212, 175, 55, 0.12);
             border-left: 2px solid #d4af37;
             color: #d4af37;
             font-weight: 600;
@@ -175,7 +223,7 @@
             
             <!-- Brand Logo -->
             <div class="px-2.5 py-1.5 rounded-lg border border-gold-400/30 bg-gold-400/[0.03] backdrop-blur-sm hover:border-gold-400/60 transition-all shrink-0">
-                <a href="#hero" onclick="switchTier(0)" class="text-sm sm:text-lg font-serif font-bold text-white hover:text-gold-400 transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                <a href="#hero" onclick="switchTier(0); return false;" class="text-xs sm:text-lg font-serif font-bold text-white hover:text-gold-400 transition-colors flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-kaaba text-gold-400 text-xs sm:text-sm"></i>
                     <span>AL-TAMKEEN</span>
                     <span class="text-xs font-mono text-gold-400 font-normal hidden sm:inline">التَّمْكِين</span>
@@ -183,28 +231,28 @@
             </div>
 
             <!-- 5-NODE LIFELINE PROGRESS TRACKER -->
-            <div class="flex-grow max-w-md mx-1 sm:mx-4 relative">
+            <div class="flex-grow max-w-xs sm:max-w-md mx-1 sm:mx-4 relative">
                 <div class="flex items-center justify-between relative z-10">
-                    <button onclick="switchTier(0)" id="node-hero" class="lifeline-node active" title="Tier 00: Overview">00</button>
-                    <button onclick="switchTier(1)" id="node-self" class="lifeline-node opacity-50 cursor-not-allowed" title="Tier 01: Self Focus">01</button>
-                    <button onclick="switchTier(2)" id="node-family" class="lifeline-node opacity-50 cursor-not-allowed" title="Tier 02: Family Law">02</button>
-                    <button onclick="switchTier(3)" id="node-gov" class="lifeline-node opacity-50 cursor-not-allowed" title="Tier 03: Waqf Governance">03</button>
-                    <button onclick="switchTier(4)" id="node-sim" class="lifeline-node opacity-50 cursor-not-allowed" title="Tier 04: Simulators">04</button>
+                    <button onclick="switchTier(0)" id="node-hero" class="lifeline-node active" title="Tier 00: Overview" aria-label="Tier 00 Overview">00</button>
+                    <button onclick="switchTier(1)" id="node-self" class="lifeline-node unlocked" title="Tier 01: Self Focus" aria-label="Tier 01 Self Focus">01</button>
+                    <button onclick="switchTier(2)" id="node-family" class="lifeline-node opacity-55 cursor-not-allowed" title="Tier 02: Family Law (Locked)" aria-label="Tier 02 Family Law">02</button>
+                    <button onclick="switchTier(3)" id="node-gov" class="lifeline-node opacity-55 cursor-not-allowed" title="Tier 03: Waqf Governance (Locked)" aria-label="Tier 03 Waqf Governance">03</button>
+                    <button onclick="switchTier(4)" id="node-sim" class="lifeline-node opacity-55 cursor-not-allowed" title="Tier 04: Simulators (Locked)" aria-label="Tier 04 Simulators">04</button>
                 </div>
-                <div class="absolute top-1/2 left-0 w-full h-[2px] bg-white/10 -translate-y-1/2 z-0"></div>
-                <div id="lifeline-active-beam" class="absolute top-1/2 left-0 h-[2px] bg-gradient-to-r from-emerald-500 via-gold-400 to-teal-400 -translate-y-1/2 z-0 transition-all duration-300" style="width: 0%;"></div>
+                <div class="absolute top-1/2 left-0 w-full h-[2px] bg-white/10 -translate-y-1/2 z-0 rounded-full"></div>
+                <div id="lifeline-active-beam" class="absolute top-1/2 left-0 h-[2px] bg-gradient-to-r from-emerald-500 via-gold-400 to-teal-400 -translate-y-1/2 z-0 transition-all duration-500 rounded-full" style="width: 0%;"></div>
             </div>
             
             <!-- Utilities (Language + Mauritius) -->
             <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
-                <select id="lang-selector" class="bg-slate-900 text-gold-400 text-xs border border-gold-400/30 rounded-md px-1.5 sm:px-2 py-1.5 focus:outline-none font-mono">
+                <select id="lang-selector" aria-label="Select Language" class="bg-slate-900 text-gold-400 text-xs border border-gold-400/30 rounded-md px-1.5 sm:px-2 py-1.5 min-h-[34px] focus:outline-none font-mono">
                     <option value="en">EN</option>
                     <option value="ar">AR</option>
                 </select>
                 
-                <div class="px-2.5 sm:px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono flex items-center gap-1.5 whitespace-nowrap">
+                <div class="px-2 sm:px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-location-dot text-gold-400"></i>
-                    <span class="hidden min-[420px]:inline">Mauritius</span>
+                    <span class="hidden min-[440px]:inline">Mauritius</span>
                 </div>
             </div>
 
@@ -212,11 +260,11 @@
     </nav>
 
     <!-- FULL-WIDTH DYNAMIC SECTION BANNER & SUB-PROGRESS BAR (Snaps to top: 0px when in Tiers 01-04) -->
-    <div id="section-status-banner" class="fixed top-[48px] left-0 w-full bg-slate-900/95 backdrop-blur-md border-b border-gold-400/20 z-40 shadow-lg">
+    <div id="section-status-banner" class="fixed top-[50px] left-0 w-full bg-slate-900/95 backdrop-blur-md border-b border-gold-400/20 z-40 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-3 text-xs font-mono">
             <div class="flex items-center gap-2 truncate">
-                <button id="banner-home-btn" onclick="switchTier(0)" class="hidden text-slate-400 hover:text-gold-400 transition-colors mr-1" title="Return to Overview">
-                    <i class="fa-solid fa-house text-xs"></i>
+                <button id="banner-home-btn" onclick="switchTier(0)" class="hidden text-slate-300 hover:text-gold-400 transition-colors mr-1 px-2 py-0.5 rounded bg-white/5 border border-white/10" title="Return to Overview">
+                    <i class="fa-solid fa-house text-[11px] mr-1"></i><span class="hidden sm:inline">Overview</span>
                 </button>
                 <i id="banner-icon" class="fa-solid fa-building-columns text-gold-400"></i>
                 <span id="dynamic-section-label" class="text-gold-400 font-semibold tracking-wide truncate">
@@ -236,6 +284,19 @@
         </div>
     </div>
 
+    <!-- INLINE GLASSMORPHIC TOAST FEEDBACK (Replaces browser alert on locked items) -->
+    <div id="tamkeen-toast" class="fixed bottom-20 sm:bottom-8 right-4 left-4 sm:left-auto sm:w-96 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+        <div class="bg-slate-900/95 backdrop-blur-xl border border-gold-400/40 rounded-xl p-3.5 shadow-2xl flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gold-400/15 border border-gold-400/30 flex items-center justify-center shrink-0 text-gold-400">
+                <i class="fa-solid fa-lock text-xs"></i>
+            </div>
+            <div class="text-xs">
+                <div class="font-mono font-bold text-gold-400">Sequential Tier Gate</div>
+                <p id="tamkeen-toast-msg" class="text-slate-300 font-light mt-0.5">Complete the preceding tier to unlock this module.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- FLOATING TABLE OF CONTENTS SIDEBAR (Desktop View) -->
     <aside class="hidden xl:block fixed left-8 top-40 z-30 w-64 bg-slate-900/80 backdrop-blur-xl border border-gold-400/20 rounded-2xl p-4 shadow-2xl space-y-3">
         <div class="flex items-center justify-between pb-3 border-b border-white/10 text-xs font-mono text-gold-400">
@@ -245,123 +306,321 @@
         <nav class="space-y-1.5 text-xs font-mono">
             <button onclick="switchTier(0)" class="toc-btn w-full flex items-center justify-between p-2 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left active" data-tier="0">
                 <span class="flex items-center gap-2"><span class="text-[10px] text-slate-500">00</span> Overview</span>
-                <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                <i class="fa-solid fa-circle text-[6px] text-gold-400"></i>
             </button>
-            <button onclick="switchTier(1)" class="toc-btn w-full flex items-center justify-between p-2 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="1">
+            <button onclick="switchTier(1)" class="toc-btn w-full flex items-center justify-between p-2 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left" data-tier="1">
                 <span class="flex items-center gap-2"><span class="text-[10px] text-emerald-400">01</span> Self Focus</span>
-                <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                <i class="toc-status-icon fa-solid fa-unlock text-[10px] text-emerald-400"></i>
             </button>
             <button onclick="switchTier(2)" class="toc-btn w-full flex items-center justify-between p-2 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="2">
                 <span class="flex items-center gap-2"><span class="text-[10px] text-gold-400">02</span> Family Law</span>
-                <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                <i class="toc-status-icon fa-solid fa-lock text-[10px] text-slate-500"></i>
             </button>
             <button onclick="switchTier(3)" class="toc-btn w-full flex items-center justify-between p-2 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="3">
                 <span class="flex items-center gap-2"><span class="text-[10px] text-teal-400">03</span> Waqf Governance</span>
-                <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                <i class="toc-status-icon fa-solid fa-lock text-[10px] text-slate-500"></i>
             </button>
             <button onclick="switchTier(4)" class="toc-btn w-full flex items-center justify-between p-2 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="4">
                 <span class="flex items-center gap-2"><span class="text-[10px] text-amber-400">04</span> Simulators</span>
-                <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                <i class="toc-status-icon fa-solid fa-lock text-[10px] text-slate-500"></i>
             </button>
         </nav>
-        <div class="pt-2 border-t border-white/10 text-[10px] text-slate-500 text-center font-mono">
-            Progressive Stage Mode
+        <div class="pt-2.5 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+            <span>Progressive Mode</span>
+            <button onclick="resetTamkeenProgress()" class="text-slate-400 hover:text-gold-400 transition-colors flex items-center gap-1" title="Reset Unlocked Tiers">
+                <i class="fa-solid fa-rotate-left text-[9px]"></i> Reset
+            </button>
         </div>
     </aside>
 
-    <!-- MOBILE TOC FLOATING TRIGGER BUTTON -->
-    <button onclick="toggleMobileToc()" class="xl:hidden fixed bottom-6 left-6 z-40 bg-slate-900/90 hover:bg-slate-800 text-gold-400 border border-gold-400/40 p-3.5 rounded-full shadow-2xl backdrop-blur-md flex items-center justify-center transition-all">
+    <!-- MOBILE TOC FLOATING TRIGGER BUTTON (Respects iOS/Android safe-area bottom) -->
+    <button onclick="toggleMobileToc()" aria-label="Open Navigation Map" style="bottom: calc(1.25rem + var(--safe-bottom));" class="xl:hidden fixed left-5 z-40 w-12 h-12 bg-slate-900/95 hover:bg-slate-800 text-gold-400 border border-gold-400/40 rounded-full shadow-2xl backdrop-blur-md flex items-center justify-center transition-all active:scale-95">
         <i class="fa-solid fa-compass text-lg"></i>
     </button>
 
     <!-- MOBILE TOC SLIDE-OVER DRAWER -->
     <div id="mobile-toc-drawer" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden xl:hidden flex justify-start">
-        <div class="w-72 bg-slate-900 border-r border-gold-400/30 h-full p-6 flex flex-col justify-between shadow-2xl animate-fade-in">
+        <div class="w-72 bg-slate-900 border-r border-gold-400/30 h-full p-6 flex flex-col justify-between shadow-2xl">
             <div class="space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-white/10 text-xs font-mono text-gold-400">
                     <span class="uppercase tracking-widest"><i class="fa-solid fa-compass mr-2"></i>Navigation Map</span>
-                    <button onclick="toggleMobileToc()" class="text-slate-400 hover:text-white p-1">
+                    <button onclick="toggleMobileToc()" aria-label="Close Navigation Map" class="text-slate-400 hover:text-white p-2">
                         <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
                 <nav class="space-y-2 text-xs font-mono">
-                    <button onclick="switchTier(0); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-2.5 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left active" data-tier="0">
+                    <button onclick="switchTier(0); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-3 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left active" data-tier="0">
                         <span class="flex items-center gap-2"><span class="text-[10px] text-slate-500">00</span> Overview</span>
-                        <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                        <i class="fa-solid fa-circle text-[6px] text-gold-400"></i>
                     </button>
-                    <button onclick="switchTier(1); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-2.5 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="1">
+                    <button onclick="switchTier(1); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-3 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left" data-tier="1">
                         <span class="flex items-center gap-2"><span class="text-[10px] text-emerald-400">01</span> Self Focus</span>
-                        <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                        <i class="toc-status-icon fa-solid fa-unlock text-[10px] text-emerald-400"></i>
                     </button>
-                    <button onclick="switchTier(2); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-2.5 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="2">
+                    <button onclick="switchTier(2); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-3 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="2">
                         <span class="flex items-center gap-2"><span class="text-[10px] text-gold-400">02</span> Family Law</span>
-                        <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                        <i class="toc-status-icon fa-solid fa-lock text-[10px] text-slate-500"></i>
                     </button>
-                    <button onclick="switchTier(3); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-2.5 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="3">
+                    <button onclick="switchTier(3); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-3 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="3">
                         <span class="flex items-center gap-2"><span class="text-[10px] text-teal-400">03</span> Waqf Governance</span>
-                        <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                        <i class="toc-status-icon fa-solid fa-lock text-[10px] text-slate-500"></i>
                     </button>
-                    <button onclick="switchTier(4); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-2.5 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="4">
+                    <button onclick="switchTier(4); toggleMobileToc();" class="toc-btn w-full flex items-center justify-between p-3 rounded-lg text-slate-300 hover:text-gold-400 hover:bg-white/5 transition-all text-left opacity-60" data-tier="4">
                         <span class="flex items-center gap-2"><span class="text-[10px] text-amber-400">04</span> Simulators</span>
-                        <i class="fa-solid fa-circle text-[6px] text-slate-600"></i>
+                        <i class="toc-status-icon fa-solid fa-lock text-[10px] text-slate-500"></i>
                     </button>
                 </nav>
             </div>
-            <div class="pt-4 border-t border-white/10 text-[10px] text-slate-500 text-center font-mono">
-                Al-Tamkeen Framework © 2026
+            <div class="pt-4 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                <span>Al-Tamkeen © 2026</span>
+                <button onclick="resetTamkeenProgress(); toggleMobileToc();" class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-slate-300 hover:text-gold-400 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-left text-[9px]"></i> Reset Path
+                </button>
             </div>
         </div>
         <div class="flex-grow" onclick="toggleMobileToc()"></div>
     </div>
 
     <!-- MAIN CONTENT CONTAINER WITH GATED TIER PANELS -->
-    <main id="main-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[86px] pb-16 space-y-6 flex-grow w-full transition-all duration-300">
+    <main id="main-container" class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-[90px] pb-16 space-y-6 flex-grow w-full transition-all duration-300">
 
         <!-- ================= TIER 00: HERO / OVERVIEW PANEL ================= -->
-        <div id="tier-panel-0" class="tier-section active-tier space-y-8 pt-4">
-            <header id="hero" class="relative pb-10 overflow-hidden px-4 sm:px-6 lg:px-8 border-b border-white/10 w-full">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(6,78,59,0.25),transparent_75%)]"></div>
-                <div class="max-w-4xl mx-auto text-center relative z-10 space-y-6 flex flex-col items-center w-full">
+        <div id="tier-panel-0" class="tier-section active-tier space-y-6 pt-2 sm:pt-4">
+            <header id="hero" class="relative pb-8 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/35 w-full">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_28%,rgba(6,78,59,0.28),transparent_72%)] pointer-events-none"></div>
+                
+                <!-- Top Hero Title & Mandate -->
+                <div class="max-w-4xl mx-auto text-center relative z-10 pt-7 sm:pt-10 px-4 sm:px-6 space-y-4 sm:space-y-5 flex flex-col items-center w-full">
+                    <!-- Mauritian Context Pill -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-[11px] font-mono text-emerald-300 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-gold-400"></span>
+                        <span>Republic of Mauritius • Civic &amp; Spiritual Empowerment</span>
+                    </div>
 
-                    <div class="inline-flex items-center justify-center gap-3 sm:gap-4 border border-emerald-500/40 bg-slate-900/80 backdrop-blur-md px-4 sm:px-6 py-4 rounded-2xl border-gold-400/30 shadow-[0_0_30px_rgba(212,175,55,0.1)] max-w-full flex-wrap">
-                        <i class="fa-solid fa-star-and-crescent text-gold-400 text-xl sm:text-2xl"></i>          
+                    <div class="inline-flex items-center justify-center gap-2.5 sm:gap-4 border border-gold-400/35 bg-slate-950/85 backdrop-blur-md px-4 sm:px-7 py-3.5 sm:py-4 rounded-2xl shadow-[0_0_35px_rgba(212,175,55,0.12)] max-w-full flex-wrap">
+                        <i class="fa-solid fa-star-and-crescent text-gold-400 text-lg sm:text-2xl"></i>          
                         <h1 class="text-2xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-white text-center">
                             AL-TAMKEEN <span class="text-gold-400 font-arabic">التَّمْكِين</span>
                         </h1>            
-                        <i class="fa-solid fa-star-and-crescent text-gold-400 text-xl sm:text-2xl"></i>         
+                        <i class="fa-solid fa-star-and-crescent text-gold-400 text-lg sm:text-2xl"></i>         
                     </div> 
 
-                    <p class="max-w-2xl text-xs sm:text-sm font-mono text-slate-300 tracking-wide leading-relaxed px-2">
-                        Harmonizing <span class="text-emerald-400 font-semibold">Islamic Principles</span> and <span class="text-gold-400 font-semibold">Secular Mauritian Law</span> across Self, Family, and Community Leadership.
+                    <p class="max-w-2xl text-xs sm:text-sm font-mono text-slate-300 tracking-wide leading-relaxed px-1">
+                        Bridging <span class="text-emerald-400 font-semibold">Traditional Islamic Scholarship</span> with <span class="text-gold-400 font-semibold">Secular Mauritian Law</span> across Port Louis, Plaine Wilhems, Flacq, and every district of the island.
                     </p>
 
-                    <!-- SINGLE TIER SPOTLIGHT LAUNCHER (TIER 01 ONLY) -->
-                    <div class="w-full max-w-lg pt-4 mx-auto">
-                        <button onclick="unlockAndMoveNext(1)" class="w-full p-5 sm:p-6 rounded-2xl bg-slate-900/95 border border-gold-400/40 hover:border-gold-400 transition-all text-left flex flex-col justify-between space-y-4 group shadow-[0_0_30px_rgba(212,175,55,0.12)]">
-                            <div class="flex items-start justify-between gap-4">
-                                <div>
-                                    <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest block mb-1">
-                                        Tier 01 • Faith, Knowledge & Sincerity
+                    <!-- Kreol Morisien Tri-Lingual Cultural Nod -->
+                    <p class="text-[11px] sm:text-xs font-serif italic text-gold-100/85 tracking-wide">
+                        « Ensemble pou bâtir enn lavni solid, anrasiné dan lafwa ek lalwa. »
+                    </p>
+                </div>
+
+                <!-- OVERVIEW HERO: ELEGANT TIER CAROUSEL / SLIDER TRACK -->
+                <section id="overview-hero" class="relative z-10 w-full max-w-5xl mx-auto pt-7 sm:pt-9 pb-2">
+                    
+                    <!-- Carousel Header & Touch-Friendly Nav Controls -->
+                    <div class="flex items-center justify-between px-4 sm:px-8 mb-4">
+                        <div class="text-left">
+                            <span class="text-[10px] sm:text-[11px] font-mono font-semibold uppercase tracking-widest text-gold-400 block">
+                                Sequential Empowerment Pathway
+                            </span>
+                            <h2 class="text-base sm:text-xl font-serif font-bold text-white">
+                                Progression Tiers (01 — 04)
+                            </h2>
+                        </div>
+                        
+                        <!-- Quick-Jump Arrow Buttons (40x40px touch target) -->
+                        <div class="flex items-center gap-2">
+                            <button onclick="scrollTierTrack(-1)" aria-label="Previous Tier Card"
+                                class="w-10 h-10 rounded-xl bg-slate-950/90 border border-white/15 text-slate-300 hover:text-gold-400 hover:border-gold-400/50 active:scale-95 transition flex items-center justify-center">
+                                <i class="fa-solid fa-chevron-left text-xs"></i>
+                            </button>
+                            <button onclick="scrollTierTrack(1)" aria-label="Next Tier Card"
+                                class="w-10 h-10 rounded-xl bg-slate-950/90 border border-white/15 text-slate-300 hover:text-gold-400 hover:border-gold-400/50 active:scale-95 transition flex items-center justify-center">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Horizontal Slider Track (84vw peek on mobile, sleek multi-card on desktop) -->
+                    <div id="tierSliderTrack" 
+                        class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 sm:px-8 pb-4 no-scrollbar touch-pan-y">
+
+                        <!-- TIER 01 CARD (ACTIVE / UNLOCKED BY DEFAULT) -->
+                        <article data-overview-tier="1" onclick="handleOverviewCardClick(1, this)"
+                            class="overview-tier-card snap-start shrink-0 w-[84vw] sm:w-[360px] relative rounded-2xl p-5 sm:p-6 bg-gradient-to-br from-slate-900 via-slate-900/95 to-emerald-950/45 border border-gold-400/45 hover:border-gold-400 shadow-[0_10px_30px_rgba(212,175,55,0.12)] transition-all duration-300 cursor-pointer flex flex-col justify-between group">
+                            
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-3.5">
+                                    <span class="tier-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-gold-400/15 text-gold-400 border border-gold-400/35">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse"></span>
+                                        TIER 01 • AVAILABLE
                                     </span>
-                                    <div class="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-gold-400 transition-colors">
-                                        Individual Self Focus
-                                    </div>
+                                    <span class="font-arabic text-base text-gold-400/90" dir="rtl">إِصْلَاحُ النَّفْسِ</span>
                                 </div>
-                                <div class="font-arabic text-lg sm:text-xl text-gold-400 text-right shrink-0" dir="rtl">
-                                    إِصْلَاحُ النَّفْسِ وَالتَّزْكِيَةُ
+
+                                <h3 class="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-gold-400 transition-colors mb-1.5">
+                                    Individual Self Focus
+                                </h3>
+                                <p class="text-xs text-slate-300 font-light leading-relaxed mb-5">
+                                    Tazkiyah & inner sincerity (<em>Ikhlas</em>), authentic Islamic scholarship, Mauritian civic literacy, and ethical Halal livelihoods.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-3.5 border-t border-white/10">
+                                <span class="text-[11px] font-mono text-emerald-400">3 Core Modules</span>
+                                <span class="tier-cta px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-gold-400 group-hover:bg-gold-100 text-slate-950 transition shadow-sm flex items-center gap-1.5">
+                                    <span>Enter Tier 01</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+                                </span>
+                            </div>
+                        </article>
+
+                        <!-- TIER 02 CARD (LOCKED INITIALLY) -->
+                        <article data-overview-tier="2" onclick="handleOverviewCardClick(2, this)"
+                            class="overview-tier-card is-locked snap-start shrink-0 w-[84vw] sm:w-[360px] relative rounded-2xl p-5 sm:p-6 bg-slate-950/75 backdrop-blur-md border border-white/10 opacity-85 hover:opacity-95 transition-all duration-300 cursor-pointer flex flex-col justify-between select-none">
+                            
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-3.5">
+                                    <span class="tier-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-900 text-slate-400 border border-white/10">
+                                        <i class="fa-solid fa-lock text-gold-400/75 text-[10px]"></i>
+                                        TIER 02 • LOCKED
+                                    </span>
+                                    <span class="font-arabic text-base text-slate-500" dir="rtl">الْأُسْرَةُ وَالْقَانُون</span>
+                                </div>
+
+                                <h3 class="text-lg sm:text-xl font-serif font-bold text-slate-200 mb-1.5">
+                                    Family Stewardship & Law
+                                </h3>
+                                <p class="text-xs text-slate-400 font-light leading-relaxed mb-5">
+                                    Muslim Family Council (MFC) Nikah registration, Mauritian Civil Status Act protections, and Waqf Act Section 6 estate planning vs. <em>Code Civil Mauricien</em>.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-3.5 border-t border-white/10">
+                                <span class="tier-req text-[11px] font-mono text-slate-500">Requires Tier 01</span>
+                                <span class="tier-cta px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-slate-900 text-slate-400 border border-white/10 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-lock text-[10px]"></i>
+                                    <span>Locked</span>
+                                </span>
+                            </div>
+                        </article>
+
+                        <!-- TIER 03 CARD (LOCKED INITIALLY) -->
+                        <article data-overview-tier="3" onclick="handleOverviewCardClick(3, this)"
+                            class="overview-tier-card is-locked snap-start shrink-0 w-[84vw] sm:w-[360px] relative rounded-2xl p-5 sm:p-6 bg-slate-950/75 backdrop-blur-md border border-white/10 opacity-85 hover:opacity-95 transition-all duration-300 cursor-pointer flex flex-col justify-between select-none">
+                            
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-3.5">
+                                    <span class="tier-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-900 text-slate-400 border border-white/10">
+                                        <i class="fa-solid fa-lock text-gold-400/75 text-[10px]"></i>
+                                        TIER 03 • LOCKED
+                                    </span>
+                                    <span class="font-arabic text-base text-slate-500" dir="rtl">إِدَارَةُ الأَوْقَاف</span>
+                                </div>
+
+                                <h3 class="text-lg sm:text-xl font-serif font-bold text-slate-200 mb-1.5">
+                                    Mosque & Waqf Governance
+                                </h3>
+                                <p class="text-xs text-slate-400 font-light leading-relaxed mb-5">
+                                    Waqf Act Cap 293 &amp; Board of Waqf Commissioners duties, Section 28 first-charge repairs, April 1st audits, and FCC dual-custody cash protocols.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-3.5 border-t border-white/10">
+                                <span class="tier-req text-[11px] font-mono text-slate-500">Requires Tier 02</span>
+                                <span class="tier-cta px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-slate-900 text-slate-400 border border-white/10 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-lock text-[10px]"></i>
+                                    <span>Locked</span>
+                                </span>
+                            </div>
+                        </article>
+
+                        <!-- TIER 04 CARD (LOCKED INITIALLY) -->
+                        <article data-overview-tier="4" onclick="handleOverviewCardClick(4, this)"
+                            class="overview-tier-card is-locked snap-start shrink-0 w-[84vw] sm:w-[360px] relative rounded-2xl p-5 sm:p-6 bg-slate-950/75 backdrop-blur-md border border-white/10 opacity-85 hover:opacity-95 transition-all duration-300 cursor-pointer flex flex-col justify-between select-none">
+                            
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-3.5">
+                                    <span class="tier-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-900 text-slate-400 border border-white/10">
+                                        <i class="fa-solid fa-lock text-gold-400/75 text-[10px]"></i>
+                                        TIER 04 • LOCKED
+                                    </span>
+                                    <span class="font-arabic text-base text-slate-500" dir="rtl">مُحَاكَاةُ التَّمْكِين</span>
+                                </div>
+
+                                <h3 class="text-lg sm:text-xl font-serif font-bold text-slate-200 mb-1.5">
+                                    Compliance & Resilience Simulators
+                                </h3>
+                                <p class="text-xs text-slate-400 font-light leading-relaxed mb-5">
+                                    Interactive Mutawalli legal audit scoring engine and Community Empowerment Equilibrium simulator across all three pillars.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-3.5 border-t border-white/10">
+                                <span class="tier-req text-[11px] font-mono text-slate-500">Requires Tier 03</span>
+                                <span class="tier-cta px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-slate-900 text-slate-400 border border-white/10 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-lock text-[10px]"></i>
+                                    <span>Locked</span>
+                                </span>
+                            </div>
+                        </article>
+
+                    </div>
+
+                    <!-- Minimal Pill Pagination Dots -->
+                    <div id="tierSliderDots" class="flex justify-center items-center gap-2 mt-2">
+                        <button onclick="scrollToOverviewCard(0)" aria-label="Slide 1" class="w-6 h-1.5 rounded-full bg-gold-400 transition-all duration-300"></button>
+                        <button onclick="scrollToOverviewCard(1)" aria-label="Slide 2" class="w-1.5 h-1.5 rounded-full bg-slate-700 hover:bg-slate-500 transition-all duration-300"></button>
+                        <button onclick="scrollToOverviewCard(2)" aria-label="Slide 3" class="w-1.5 h-1.5 rounded-full bg-slate-700 hover:bg-slate-500 transition-all duration-300"></button>
+                        <button onclick="scrollToOverviewCard(3)" aria-label="Slide 4" class="w-1.5 h-1.5 rounded-full bg-slate-700 hover:bg-slate-500 transition-all duration-300"></button>
+                    </div>
+
+                    <!-- THE MAURITIAN MUSLIM CIVIC MOSAIC -->
+                    <div class="mt-7 mx-4 sm:mx-8 rounded-2xl bg-slate-950/70 backdrop-blur-md border border-gold-400/20 p-4 sm:p-5 space-y-3.5">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2.5">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-landmark-dome text-gold-400 text-xs"></i>
+                                <span class="text-xs font-mono font-bold uppercase tracking-wider text-white">The Mauritian Muslim Landscape</span>
+                            </div>
+                            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-0.5 rounded-full">
+                                L'unité dans la diversité
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-900/75 border border-white/5 flex items-start gap-2.5">
+                                <i class="fa-solid fa-scale-balanced text-gold-400 mt-0.5 shrink-0"></i>
+                                <div>
+                                    <span class="font-mono font-semibold text-slate-200 block text-[11px]">Statutory Alignment</span>
+                                    <p class="text-[11px] text-slate-400 font-light leading-relaxed mt-0.5">
+                                        Constitutional freedom (Sec 11 &amp; 14), Board of Waqf Commissioners, and Muslim Family Council oversight.
+                                    </p>
                                 </div>
                             </div>
 
-                            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-gold-400">
-                                <span class="flex items-center gap-2">
-                                    <i class="fa-solid fa-play text-[10px]"></i>
-                                    <span>Begin the Journey with Tier 01</span>
-                                </span>
-                                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            <div class="p-3 rounded-xl bg-slate-900/75 border border-white/5 flex items-start gap-2.5">
+                                <i class="fa-solid fa-mosque text-emerald-400 mt-0.5 shrink-0"></i>
+                                <div>
+                                    <span class="font-mono font-semibold text-slate-200 block text-[11px]">Island-Wide Jama'ah</span>
+                                    <p class="text-[11px] text-slate-400 font-light leading-relaxed mt-0.5">
+                                        Strengthening historic Masajid, Madrasahs, and regional waqf trusts from Port Louis to Central Flacq &amp; Savanne.
+                                    </p>
+                                </div>
                             </div>
-                        </button>
+
+                            <div class="p-3 rounded-xl bg-slate-900/75 border border-white/5 flex items-start gap-2.5">
+                                <i class="fa-solid fa-handshake-angle text-teal-400 mt-0.5 shrink-0"></i>
+                                <div>
+                                    <span class="font-mono font-semibold text-slate-200 block text-[11px]">Pluralist Citizenship</span>
+                                    <p class="text-[11px] text-slate-400 font-light leading-relaxed mt-0.5">
+                                        Active socio-economic contribution, ethical stewardship, and civic harmony within the Mauritian nation.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
             </header>
         </div>
 
@@ -380,21 +639,21 @@
                 <!-- ELEGANT INTERACTIVE SLIDER ENGINE FOR TIER 1 -->
                 <div class="space-y-5">
                     <!-- Module Segmented Control Tabs -->
-                    <div class="flex justify-center items-center gap-2 max-w-lg mx-auto p-1.5 bg-slate-900/90 border border-gold-400/20 rounded-xl backdrop-blur-md">
-                        <button onclick="goToTier1Slide(0)" class="tier1-tab flex-1 py-1.5 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30">
+                    <div class="flex justify-center items-center gap-1.5 sm:gap-2 max-w-lg mx-auto p-1.5 bg-slate-900/90 border border-gold-400/20 rounded-xl backdrop-blur-md">
+                        <button onclick="goToTier1Slide(0)" class="tier1-tab flex-1 py-2 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30">
                             1.1 Tazkiyah
                         </button>
-                        <button onclick="goToTier1Slide(1)" class="tier1-tab flex-1 py-1.5 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white">
+                        <button onclick="goToTier1Slide(1)" class="tier1-tab flex-1 py-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white">
                             1.2 Knowledge
                         </button>
-                        <button onclick="goToTier1Slide(2)" class="tier1-tab flex-1 py-1.5 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white">
+                        <button onclick="goToTier1Slide(2)" class="tier1-tab flex-1 py-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white">
                             1.3 Finance
                         </button>
                     </div>
 
                     <!-- Slider Stage & Track -->
-                    <div class="relative overflow-hidden rounded-2xl" id="tier1-viewport">
-                        <div id="tier1-track" class="flex transition-transform duration-500 ease-out cursor-grab active:cursor-grabbing select-none" style="transform: translateX(0%);">
+                    <div class="relative overflow-hidden rounded-2xl touch-pan-y" id="tier1-viewport">
+                        <div id="tier1-track" class="flex transition-transform duration-500 ease-out select-none" style="transform: translateX(0%);">
                             
                             <!-- Card 1.1 -->
                             <div class="w-full shrink-0 px-1 sm:px-4">
@@ -415,7 +674,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-5 border-t border-white/10 mt-5">
-                                        <button onclick="openModal('self_integrity')" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                                        <button onclick="openModal('self_integrity')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                             <span>Explore Tazkiyah Framework</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -444,7 +703,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-5 border-t border-white/10 mt-5">
-                                        <button onclick="openModal('self_knowledge')" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                                        <button onclick="openModal('self_knowledge')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                             <span>View Learning Matrix</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -472,7 +731,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-5 border-t border-white/10 mt-5">
-                                        <button onclick="openModal('self_finance')" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                                        <button onclick="openModal('self_finance')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                             <span>Explore Financial Ethics</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -483,33 +742,32 @@
                         </div>
                     </div>
 
-                    <!-- Bottom Slider Controls (Arrows & Indicator Dots) -->
+                    <!-- Bottom Slider Controls (44px touch targets) -->
                     <div class="flex items-center justify-between max-w-xs mx-auto pt-1 px-4">
-                        <button onclick="moveTier1Slide(-1)" class="p-2.5 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 transition-colors">
+                        <button onclick="moveTier1Slide(-1)" aria-label="Previous Module" class="w-11 h-11 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 active:scale-95 transition flex items-center justify-center">
                             <i class="fa-solid fa-chevron-left text-xs"></i>
                         </button>
 
-                        <div class="flex items-center gap-2" id="tier1-dots">
-                            <button onclick="goToTier1Slide(0)" class="w-2.5 h-2.5 rounded-full bg-gold-400 transition-all"></button>
-                            <button onclick="goToTier1Slide(1)" class="w-2 h-2 rounded-full bg-white/20 transition-all"></button>
-                            <button onclick="goToTier1Slide(2)" class="w-2 h-2 rounded-full bg-white/20 transition-all"></button>
+                        <div class="flex items-center gap-2.5" id="tier1-dots">
+                            <button onclick="goToTier1Slide(0)" aria-label="Module 1.1" class="w-3 h-3 rounded-full bg-gold-400 transition-all"></button>
+                            <button onclick="goToTier1Slide(1)" aria-label="Module 1.2" class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all"></button>
+                            <button onclick="goToTier1Slide(2)" aria-label="Module 1.3" class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all"></button>
                         </div>
 
-                        <button onclick="moveTier1Slide(1)" class="p-2.5 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 transition-colors">
+                        <button onclick="moveTier1Slide(1)" aria-label="Next Module" class="w-11 h-11 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 active:scale-95 transition flex items-center justify-center">
                             <i class="fa-solid fa-chevron-right text-xs"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- TIER PROGRESSION BUTTON -->
-                <div class="pt-8 border-t border-white/10 mt-8 flex flex-wrap justify-between items-center gap-4">
-                    <button onclick="switchTier(0)" class="px-5 py-2.5 bg-slate-900 border border-white/10 text-slate-300 hover:text-white font-mono text-xs rounded-xl transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-arrow-left"></i><span>Back to Overview</span>
-                    </button>
-                    <button onclick="unlockAndMoveNext(2)" class="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-mono text-xs uppercase tracking-widest rounded-xl shadow-lg transition-all flex items-center gap-3">
-                        <span>Proceed to Family Law</span><i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
+
+<!-- Inside #tier-panel-1 -->
+<div id="tier-progression-dock-1" class="pt-8 border-t border-white/10 mt-8"></div>
+
+
+
+
+					
             </section>
         </div>
 
@@ -527,11 +785,11 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Card 2.1 -->
-                    <div class="bg-slate-900/90 border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-gold-400/40 transition-all shadow-lg">
+                    <div class="bg-slate-900/90 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between hover:border-gold-400/40 transition-all shadow-lg">
                         <div class="space-y-4">
-                            <div class="sticky-card-header p-3 rounded-lg border border-gold-400/20 flex items-center justify-between">
+                            <div class="sticky-card-header p-3 rounded-lg border border-gold-400/20 flex items-center justify-between gap-2">
                                 <span class="text-xs font-mono font-bold text-gold-400 uppercase font-sans">Muslim Family Council (MFC) & Nikah Registration</span>
-                                <i class="fa-solid fa-file-contract text-emerald-400"></i>
+                                <i class="fa-solid fa-file-contract text-emerald-400 shrink-0"></i>
                             </div>
                             <h3 class="text-lg font-serif font-bold text-white">Muslim Marriage (Nikah) & Mauritian Civil Status</h3>
                             <p class="text-xs text-slate-300 font-light leading-relaxed">
@@ -549,7 +807,7 @@
                             </ul>
                         </div>
                         <div class="pt-6 border-t border-white/10 mt-6">
-                            <button onclick="openModal('family_mfc')" class="w-full py-2 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                            <button onclick="openModal('family_mfc')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                 <span>View MFC & Nikah Guidelines</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </button>
@@ -557,11 +815,11 @@
                     </div>
 
                     <!-- Card 2.2 -->
-                    <div class="bg-slate-900/90 border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-gold-400/40 transition-all shadow-lg">
+                    <div class="bg-slate-900/90 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between hover:border-gold-400/40 transition-all shadow-lg">
                         <div class="space-y-4">
-                            <div class="sticky-card-header p-3 rounded-lg border border-gold-400/20 flex items-center justify-between">
+                            <div class="sticky-card-header p-3 rounded-lg border border-gold-400/20 flex items-center justify-between gap-2">
                                 <span class="text-xs font-mono font-bold text-gold-400 uppercase font-sans">Waqf Act Inter Vivos vs Code Civil Mauricien</span>
-                                <i class="fa-solid fa-scale-balanced text-gold-400"></i>
+                                <i class="fa-solid fa-scale-balanced text-gold-400 shrink-0"></i>
                             </div>
                             <h3 class="text-lg font-serif font-bold text-white">Estate Planning, Wills & Family Waqf</h3>
                             <p class="text-xs text-slate-300 font-light leading-relaxed">
@@ -575,7 +833,7 @@
                             </div>
                         </div>
                         <div class="pt-6 border-t border-white/10 mt-6">
-                            <button onclick="openModal('family_estate')" class="w-full py-2 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                            <button onclick="openModal('family_estate')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                 <span>Analyze Estate Planning Laws</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </button>
@@ -583,15 +841,12 @@
                     </div>
                 </div>
 
-                <!-- TIER PROGRESSION BUTTON -->
-                <div class="pt-8 border-t border-white/10 mt-8 flex flex-wrap justify-between items-center gap-4">
-                    <button onclick="switchTier(1)" class="px-5 py-2.5 bg-slate-900 border border-white/10 text-slate-300 hover:text-white font-mono text-xs rounded-xl transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-arrow-left"></i><span>Back to Self Focus</span>
-                    </button>
-                    <button onclick="unlockAndMoveNext(3)" class="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-mono text-xs uppercase tracking-widest rounded-xl shadow-lg transition-all flex items-center gap-3">
-                        <span>Proceed to Waqf Governance</span><i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
+
+
+<!-- Inside #tier-panel-2 -->
+<div id="tier-progression-dock-2" class="pt-8 border-t border-white/10 mt-8"></div>
+
+			
             </section>
         </div>
 
@@ -611,23 +866,23 @@
                 <div class="space-y-5">
                     <!-- Rule Segmented Control Tabs -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 max-w-2xl mx-auto p-1.5 bg-slate-900/90 border border-gold-400/20 rounded-xl backdrop-blur-md">
-                        <button onclick="goToTier3Slide(0)" class="tier3-tab py-1.5 px-2 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30 truncate">
+                        <button onclick="goToTier3Slide(0)" class="tier3-tab py-2 px-2 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30 truncate">
                             3.1 Sec 28 Repairs
                         </button>
-                        <button onclick="goToTier3Slide(1)" class="tier3-tab py-1.5 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate">
+                        <button onclick="goToTier3Slide(1)" class="tier3-tab py-2 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate">
                             3.2 Sec 20/39 Sale
                         </button>
-                        <button onclick="goToTier3Slide(2)" class="tier3-tab py-1.5 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate">
+                        <button onclick="goToTier3Slide(2)" class="tier3-tab py-2 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate">
                             3.3 Sec 44 Audits
                         </button>
-                        <button onclick="goToTier3Slide(3)" class="tier3-tab py-1.5 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate">
+                        <button onclick="goToTier3Slide(3)" class="tier3-tab py-2 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate">
                             3.4 FCC Cash Box
                         </button>
                     </div>
 
                     <!-- Slider Stage & Track -->
-                    <div class="relative overflow-hidden rounded-2xl" id="tier3-viewport">
-                        <div id="tier3-track" class="flex transition-transform duration-500 ease-out cursor-grab active:cursor-grabbing select-none" style="transform: translateX(0%);">
+                    <div class="relative overflow-hidden rounded-2xl touch-pan-y" id="tier3-viewport">
+                        <div id="tier3-track" class="flex transition-transform duration-500 ease-out select-none" style="transform: translateX(0%);">
                             
                             <!-- Card 3.1 -->
                             <div class="w-full shrink-0 px-1 sm:px-4">
@@ -646,7 +901,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-5 border-t border-white/10 mt-5">
-                                        <button onclick="openModal('gov_first_charge')" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                                        <button onclick="openModal('gov_first_charge')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                             <span>Explore Section 28 Statutory Details</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -671,7 +926,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-5 border-t border-white/10 mt-5">
-                                        <button onclick="openModal('gov_alienation')" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                                        <button onclick="openModal('gov_alienation')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                             <span>Explore Alienation Restrictions</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -696,7 +951,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-5 border-t border-white/10 mt-5">
-                                        <button onclick="openModal('gov_audit')" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                                        <button onclick="openModal('gov_audit')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                             <span>View Audit Filing Deadlines</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -721,7 +976,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-5 border-t border-white/10 mt-5">
-                                        <button onclick="openModal('gov_cash')" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
+                                        <button onclick="openModal('gov_cash')" class="w-full py-3 bg-slate-950 hover:bg-slate-800 border border-white/10 text-gold-400 text-xs font-mono font-semibold rounded-lg transition-colors flex justify-between items-center px-4">
                                             <span>Inspect Dual-Custody Protocol</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -732,28 +987,28 @@
                         </div>
                     </div>
 
-                    <!-- Bottom Slider Controls (Arrows & Indicator Dots) -->
+                    <!-- Bottom Slider Controls (44px touch targets) -->
                     <div class="flex items-center justify-between max-w-xs mx-auto pt-1 px-4">
-                        <button onclick="moveTier3Slide(-1)" class="p-2.5 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 transition-colors">
+                        <button onclick="moveTier3Slide(-1)" aria-label="Previous Rule" class="w-11 h-11 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 active:scale-95 transition flex items-center justify-center">
                             <i class="fa-solid fa-chevron-left text-xs"></i>
                         </button>
 
-                        <div class="flex items-center gap-2" id="tier3-dots">
-                            <button onclick="goToTier3Slide(0)" class="w-2.5 h-2.5 rounded-full bg-gold-400 transition-all"></button>
-                            <button onclick="goToTier3Slide(1)" class="w-2 h-2 rounded-full bg-white/20 transition-all"></button>
-                            <button onclick="goToTier3Slide(2)" class="w-2 h-2 rounded-full bg-white/20 transition-all"></button>
-                            <button onclick="goToTier3Slide(3)" class="w-2 h-2 rounded-full bg-white/20 transition-all"></button>
+                        <div class="flex items-center gap-2.5" id="tier3-dots">
+                            <button onclick="goToTier3Slide(0)" aria-label="Rule 3.1" class="w-3 h-3 rounded-full bg-gold-400 transition-all"></button>
+                            <button onclick="goToTier3Slide(1)" aria-label="Rule 3.2" class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all"></button>
+                            <button onclick="goToTier3Slide(2)" aria-label="Rule 3.3" class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all"></button>
+                            <button onclick="goToTier3Slide(3)" aria-label="Rule 3.4" class="w-2.5 h-2.5 rounded-full bg-white/20 transition-all"></button>
                         </div>
 
-                        <button onclick="moveTier3Slide(1)" class="p-2.5 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 transition-colors">
+                        <button onclick="moveTier3Slide(1)" aria-label="Next Rule" class="w-11 h-11 rounded-full bg-slate-900 border border-white/10 text-gold-400 hover:border-gold-400 active:scale-95 transition flex items-center justify-center">
                             <i class="fa-solid fa-chevron-right text-xs"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- INSTITUTIONAL MAP OF MAURITIUS -->
-                <div class="mt-10 bg-slate-900/90 border border-gold-400/30 rounded-2xl p-6 space-y-6">
-                    <div class="flex flex-wrap justify-between items-center border-b border-white/10 pb-4">
+                <div class="mt-10 bg-slate-900/90 border border-gold-400/30 rounded-2xl p-5 sm:p-6 space-y-6">
+                    <div class="flex flex-wrap justify-between items-center border-b border-white/10 pb-4 gap-3">
                         <div>
                             <h3 class="text-xl font-serif font-bold text-white">Key Islamic Institutions & Pluralism in Mauritius</h3>
                             <p class="text-xs font-mono text-gold-400">Balancing Sectoral Harmony, Theological Diversity & Secular Oversight</p>
@@ -781,15 +1036,11 @@
                     </div>
                 </div>
 
-                <!-- TIER PROGRESSION BUTTON -->
-                <div class="pt-8 border-t border-white/10 mt-8 flex flex-wrap justify-between items-center gap-4">
-                    <button onclick="switchTier(2)" class="px-5 py-2.5 bg-slate-900 border border-white/10 text-slate-300 hover:text-white font-mono text-xs rounded-xl transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-arrow-left"></i><span>Back to Family Law</span>
-                    </button>
-                    <button onclick="unlockAndMoveNext(4)" class="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-mono text-xs uppercase tracking-widest rounded-xl shadow-lg transition-all flex items-center gap-3">
-                        <span>Proceed to Simulators</span><i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
+               
+<!-- Inside #tier-panel-3 -->
+<div id="tier-progression-dock-3" class="pt-8 border-t border-white/10 mt-8"></div>
+
+
             </section>
         </div>
 
@@ -807,19 +1058,19 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- SIMULATOR 1 -->
-                    <div class="bg-slate-900 border border-gold-400/20 rounded-2xl p-6 space-y-6 shadow-xl">
-                        <div class="sticky-card-header p-4 rounded-xl border border-white/10 flex justify-between items-start">
+                    <div class="bg-slate-900 border border-gold-400/20 rounded-2xl p-5 sm:p-6 space-y-6 shadow-xl">
+                        <div class="sticky-card-header p-4 rounded-xl border border-white/10 flex justify-between items-start gap-2">
                             <div>
                                 <h3 class="text-lg font-serif font-bold text-white">Waqf & Mosque Legal Compliance Engine</h3>
                                 <p class="text-xs font-mono text-gold-400">Audit & Risk Evaluator for Mosque Mutawallis</p>
                             </div>
-                            <i class="fa-solid fa-calculator text-gold-400 text-xl"></i>
+                            <i class="fa-solid fa-calculator text-gold-400 text-xl shrink-0"></i>
                         </div>
 
                         <div class="space-y-4 text-xs font-mono">
                             <div class="space-y-2">
-                                <label class="text-slate-300 block">1. Annual Audited Accounts Submitted by April 1st?</label>
-                                <select id="sim-audit" onchange="runWaqfCalculator()" class="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-slate-200">
+                                <label for="sim-audit" class="text-slate-300 block">1. Annual Audited Accounts Submitted by April 1st?</label>
+                                <select id="sim-audit" onchange="runWaqfCalculator()" class="w-full bg-slate-950 border border-white/10 rounded-lg p-3 text-slate-200">
                                     <option value="100">Yes - Fully Audited by Approved Auditor</option>
                                     <option value="50">In Progress - Pending Approval</option>
                                     <option value="0">No - Missing Filing (Statutory Fine Risk)</option>
@@ -827,8 +1078,8 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-slate-300 block">2. Donation Box Collection Procedure:</label>
-                                <select id="sim-cash" onchange="runWaqfCalculator()" class="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-slate-200">
+                                <label for="sim-cash" class="text-slate-300 block">2. Donation Box Collection Procedure:</label>
+                                <select id="sim-cash" onchange="runWaqfCalculator()" class="w-full bg-slate-950 border border-white/10 rounded-lg p-3 text-slate-200">
                                     <option value="100">Dual-Custody Keys + 2-3 Witness Log (FCC Compliant)</option>
                                     <option value="40">Two Counters without Sealed Tally Sheet</option>
                                     <option value="0">Single Person Empties/Counts Alone ("Lone Counter" Risk)</option>
@@ -836,8 +1087,8 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-slate-300 block">3. Administrator Remuneration Cap:</label>
-                                <select id="sim-remun" onchange="runWaqfCalculator()" class="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-slate-200">
+                                <label for="sim-remun" class="text-slate-300 block">3. Administrator Remuneration Cap:</label>
+                                <select id="sim-remun" onchange="runWaqfCalculator()" class="w-full bg-slate-950 border border-white/10 rounded-lg p-3 text-slate-200">
                                     <option value="100">Below 10% Statutory Ceiling (Section 37)</option>
                                     <option value="0">Exceeds 10% without Court Approval</option>
                                 </select>
@@ -859,38 +1110,38 @@
                     </div>
 
                     <!-- SIMULATOR 2 -->
-                    <div class="bg-slate-900 border border-gold-400/20 rounded-2xl p-6 space-y-6 shadow-xl">
-                        <div class="sticky-card-header p-4 rounded-xl border border-white/10 flex justify-between items-start">
+                    <div class="bg-slate-900 border border-gold-400/20 rounded-2xl p-5 sm:p-6 space-y-6 shadow-xl">
+                        <div class="sticky-card-header p-4 rounded-xl border border-white/10 flex justify-between items-start gap-2">
                             <div>
                                 <h3 class="text-lg font-serif font-bold text-white">Community Empowerment Equilibrium</h3>
                                 <p class="text-xs font-mono text-gold-400">Self, Family & Governance Metrics</p>
                             </div>
-                            <i class="fa-solid fa-chart-line text-emerald-400 text-xl"></i>
+                            <i class="fa-solid fa-chart-line text-emerald-400 text-xl shrink-0"></i>
                         </div>
 
-                        <div class="space-y-4 font-mono text-xs">
-                            <div class="space-y-1.5">
+                        <div class="space-y-5 font-mono text-xs">
+                            <div class="space-y-2">
                                 <div class="flex justify-between">
-                                    <span class="text-slate-300">1. Individual Knowledge & Integrity</span>
+                                    <label for="slider-sim-self" class="text-slate-300">1. Individual Knowledge & Integrity</label>
                                     <span id="val-sim-self" class="text-emerald-400 font-bold">80%</span>
                                 </div>
-                                <input id="slider-sim-self" type="range" min="0" max="100" value="80" oninput="runEmpowermentEngine()" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                                <input id="slider-sim-self" type="range" min="0" max="100" value="80" oninput="runEmpowermentEngine()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
                             </div>
 
-                            <div class="space-y-1.5">
+                            <div class="space-y-2">
                                 <div class="flex justify-between">
-                                    <span class="text-slate-300">2. Family Stewardship & Legal Readiness</span>
+                                    <label for="slider-sim-family" class="text-slate-300">2. Family Stewardship & Legal Readiness</label>
                                     <span id="val-sim-family" class="text-gold-400 font-bold">75%</span>
                                 </div>
-                                <input id="slider-sim-family" type="range" min="0" max="100" value="75" oninput="runEmpowermentEngine()" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-gold-400">
+                                <input id="slider-sim-family" type="range" min="0" max="100" value="75" oninput="runEmpowermentEngine()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-gold-400">
                             </div>
 
-                            <div class="space-y-1.5">
+                            <div class="space-y-2">
                                 <div class="flex justify-between">
-                                    <span class="text-slate-300">3. Civic Governance & Waqf Transparency</span>
+                                    <label for="slider-sim-gov" class="text-slate-300">3. Civic Governance & Waqf Transparency</label>
                                     <span id="val-sim-gov" class="text-teal-400 font-bold">85%</span>
                                 </div>
-                                <input id="slider-sim-gov" type="range" min="0" max="100" value="85" oninput="runEmpowermentEngine()" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-teal-400">
+                                <input id="slider-sim-gov" type="range" min="0" max="100" value="85" oninput="runEmpowermentEngine()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-teal-400">
                             </div>
                         </div>
 
@@ -909,15 +1160,11 @@
                     </div>
                 </div>
 
-                <!-- TIER PROGRESSION BUTTON -->
-                <div class="pt-8 border-t border-white/10 mt-8 flex flex-wrap justify-between items-center gap-4">
-                    <button onclick="switchTier(3)" class="px-5 py-2.5 bg-slate-900 border border-white/10 text-slate-300 hover:text-white font-mono text-xs rounded-xl transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-arrow-left"></i><span>Back to Waqf Governance</span>
-                    </button>
-                    <button onclick="switchTier(0)" class="px-5 py-2.5 bg-gold-400/10 border border-gold-400/40 text-gold-400 hover:bg-gold-400/20 font-mono text-xs rounded-xl transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-rotate-left"></i><span>Return to Overview</span>
-                    </button>
-                </div>
+       
+
+<!-- Inside #tier-panel-4 -->
+<div id="tier-progression-dock-4" class="pt-8 border-t border-white/10 mt-8"></div>		
+										
             </section>
         </div>
 
@@ -931,14 +1178,14 @@
                     <i class="fa-solid fa-book-bookmark text-gold-400 text-lg"></i>
                     <h3 id="modal-title" class="text-lg font-serif font-bold text-white">Detail View</h3>
                 </div>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-2">
+                <button onclick="closeModal()" aria-label="Close Modal" class="text-slate-400 hover:text-white p-2">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
             <div id="modal-body" class="p-6 overflow-y-auto custom-scrollbar text-xs text-slate-300 leading-relaxed space-y-4">
             </div>
             <div class="p-4 bg-slate-950 border-t border-white/10 text-right">
-                <button onclick="closeModal()" class="px-5 py-2 bg-gold-400 hover:bg-gold-500 text-slate-950 font-bold font-mono rounded-lg transition-colors text-xs">
+                <button onclick="closeModal()" class="px-5 py-2.5 bg-gold-400 hover:bg-gold-500 text-slate-950 font-bold font-mono rounded-lg transition-colors text-xs">
                     Close Screen
                 </button>
             </div>
@@ -946,7 +1193,7 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-slate-950 border-t border-gold-400/20 text-slate-400 text-xs py-12 relative z-10 w-full">
+    <footer class="bg-slate-950 border-t border-gold-400/20 text-slate-400 text-xs py-10 relative z-10 w-full">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-3">
@@ -954,25 +1201,17 @@
                     <span class="text-base font-serif font-bold text-white">Al-Tamkeen Framework</span>
                 </div>
 
-            <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 font-mono gap-4">           
-                <button onclick="switchTier(0); window.scrollTo({top: 0, behavior: 'smooth'});" class="px-3 py-1 bg-slate-900 border border-white/10 hover:border-gold-400 rounded-full text-gold-400 transition-colors">
+                <button onclick="switchTier(0); window.scrollTo({top: 0, behavior: 'smooth'});" class="px-4 py-2 bg-slate-900 border border-white/10 hover:border-gold-400 rounded-full text-gold-400 font-mono text-[11px] transition-colors">
                     Statutory & Spiritual Reference <i class="fa-solid fa-arrow-up ml-1"></i>
                 </button>
             </div>
-					
 
-            </div>
-
-
-				<div class="border-t border-white/10 pt-6 flex items-center space-x-4 text-center text-xs font-mono tracking-wider">
-        			<div>&copy; 2026 <span class="font-arabic font-semibold tracking-widest text-white hover:text-gold-400 transition-colors"> Bayt al Hikmah </span>
-					<div class="text-slate-400 font-mono text-[11px] text-center sm:text-right">
-                    Preserving Faith • Respecting Secular Laws • Empowering Society
+            <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono tracking-wider">
+                <div>&copy; 2026 <span class="font-arabic font-semibold tracking-widest text-white hover:text-gold-400 transition-colors">Bayt al Hikmah</span></div>
+                <div class="text-slate-400 text-[11px] text-center sm:text-right">
+                    Preserving Faith • Respecting Mauritian Law • <span class="text-gold-400/90 italic">Ensemble pou l'Avenir</span>
                 </div>
-        </div>
-    </div>
-
-			  
+            </div>
         </div>
     </footer>
 
@@ -1076,6 +1315,207 @@
             }
         };
 
+		 const tierMetaList = [
+    { id: 0, code: "00", short: "Overview", icon: "fa-house" },
+    { id: 1, code: "01", short: "Self Focus", icon: "fa-user-gear" },
+    { id: 2, code: "02", short: "Family Law", icon: "fa-house-chimney-window" },
+    { id: 3, code: "03", short: "Waqf Gov", icon: "fa-building-shield" },
+    { id: 4, code: "04", short: "Simulators", icon: "fa-sliders" }
+];
+
+const nextTierCtaLabels = {
+    1: "Proceed to Family Law",
+    2: "Proceed to Waqf Governance",
+    3: "Proceed to Simulators"
+};
+
+function renderTierProgressionDocks() {
+    for (let panelTier = 1; panelTier <= 4; panelTier++) {
+        const dock = document.getElementById(`tier-progression-dock-${panelTier}`);
+        if (!dock) continue;
+
+        // Build pills for Overview (00) + every unlocked tier up to maxUnlockedTier
+        let jumpPillsHtml = '';
+        for (let t = 0; t <= maxUnlockedTier; t++) {
+            const meta = tierMetaList[t];
+            const isCurrent = (t === panelTier);
+            const isCompleted = (t > 0 && t < maxUnlockedTier && !isCurrent);
+
+            if (isCurrent) {
+                jumpPillsHtml += `
+                    <span class="px-3 py-2 rounded-xl bg-gold-400/15 border border-gold-400/50 text-gold-400 font-mono text-xs font-bold flex items-center gap-1.5 select-none">
+                        <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse"></span>
+                        <span>${meta.code} ${meta.short}</span>
+                    </span>
+                `;
+            } else {
+                jumpPillsHtml += `
+                    <button onclick="switchTier(${t})"
+                        class="px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-white/10 hover:border-gold-400/40 text-slate-300 hover:text-white font-mono text-xs transition-all active:scale-95 flex items-center gap-1.5">
+                        ${isCompleted 
+                            ? '<i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>' 
+                            : `<i class="fa-solid ${meta.icon} text-slate-400 text-[10px]"></i>`}
+                        <span>${meta.code} ${meta.short}</span>
+                    </button>
+                `;
+            }
+        }
+
+        // Primary Forward / Completion Action
+        let primaryActionHtml = '';
+        if (panelTier < 4) {
+            const isNextAlreadyUnlocked = (panelTier + 1 <= maxUnlockedTier);
+            primaryActionHtml = `
+                <button onclick="unlockAndMoveNext(${panelTier + 1})"
+                    class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-mono text-xs uppercase tracking-widest rounded-xl shadow-lg transition-all active:scale-98 flex items-center justify-center gap-3 shrink-0">
+                    <span>${isNextAlreadyUnlocked ? 'Next: ' + tierMetaList[panelTier + 1].short : nextTierCtaLabels[panelTier]}</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            `;
+        } else {
+            primaryActionHtml = `
+                <button onclick="switchTier(0)"
+                    class="w-full sm:w-auto px-6 py-3 bg-gold-400/15 hover:bg-gold-400/25 border border-gold-400/40 text-gold-400 font-mono text-xs uppercase tracking-widest rounded-xl transition-all active:scale-98 flex items-center justify-center gap-2.5 shrink-0">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Return to Overview</span>
+                </button>
+            `;
+        }
+
+        dock.innerHTML = `
+            <div class="bg-slate-900/60 border border-white/10 rounded-2xl p-4 sm:p-5 space-y-4">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
+                            <i class="fa-solid fa-route text-gold-400 mr-1.5"></i>Unlocked Pathway Navigation
+                        </span>
+                        <div class="flex flex-wrap items-center gap-2">
+                            ${jumpPillsHtml}
+                        </div>
+                    </div>
+                    <div class="pt-2 lg:pt-0 border-t lg:border-t-0 border-white/10 flex justify-end">
+                        ${primaryActionHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+        // --- GLASSMORPHIC TOAST FEEDBACK ---
+        let toastTimeout = null;
+        function showTamkeenToast(message) {
+            const toast = document.getElementById('tamkeen-toast');
+            const msgEl = document.getElementById('tamkeen-toast-msg');
+            if (!toast || !msgEl) return;
+
+            msgEl.innerText = message;
+            toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+            }, 3200);
+        }
+
+        // --- OVERVIEW HERO CAROUSEL / SLIDER TRACK ---
+        const overviewSliderTrack = document.getElementById('tierSliderTrack');
+        const overviewSliderDots = document.querySelectorAll('#tierSliderDots button');
+
+        function scrollTierTrack(direction) {
+            if (!overviewSliderTrack) return;
+            const firstCard = overviewSliderTrack.querySelector('article');
+            const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 360;
+            overviewSliderTrack.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+        }
+
+        function scrollToOverviewCard(index) {
+            if (!overviewSliderTrack) return;
+            const firstCard = overviewSliderTrack.querySelector('article');
+            const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 360;
+            overviewSliderTrack.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+        }
+
+        if (overviewSliderTrack) {
+            overviewSliderTrack.addEventListener('scroll', () => {
+                const firstCard = overviewSliderTrack.querySelector('article');
+                const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 360;
+                const activeIndex = Math.min(3, Math.max(0, Math.round(overviewSliderTrack.scrollLeft / cardWidth)));
+
+                overviewSliderDots.forEach((dot, idx) => {
+                    if (idx === activeIndex) {
+                        dot.className = 'w-6 h-1.5 rounded-full bg-gold-400 transition-all duration-300';
+                    } else {
+                        dot.className = 'w-1.5 h-1.5 rounded-full bg-slate-700 hover:bg-slate-500 transition-all duration-300';
+                    }
+                });
+            }, { passive: true });
+        }
+
+        function handleOverviewCardClick(tierIndex, cardEl) {
+            if (tierIndex <= maxUnlockedTier) {
+                switchTier(tierIndex);
+            } else {
+                if (cardEl) {
+                    cardEl.classList.remove('animate-shake');
+                    void cardEl.offsetWidth; // trigger reflow for repeated shakes
+                    cardEl.classList.add('animate-shake');
+                }
+                showTamkeenToast(`Tier 0${tierIndex} is locked. Complete Tier 0${tierIndex - 1} to unlock this stage.`);
+            }
+        }
+
+        function syncOverviewCardsUI() {
+            const cards = document.querySelectorAll('.overview-tier-card');
+            cards.forEach(card => {
+                const t = parseInt(card.getAttribute('data-overview-tier'));
+                const badge = card.querySelector('.tier-badge');
+                const cta = card.querySelector('.tier-cta');
+                const req = card.querySelector('.tier-req');
+
+                if (t <= maxUnlockedTier) {
+                    const isCompleted = t < maxUnlockedTier;
+                    card.className = 'overview-tier-card snap-start shrink-0 w-[84vw] sm:w-[360px] relative rounded-2xl p-5 sm:p-6 bg-gradient-to-br from-slate-900 via-slate-900/95 to-emerald-950/45 border border-gold-400/45 hover:border-gold-400 shadow-[0_10px_30px_rgba(212,175,55,0.12)] transition-all duration-300 cursor-pointer flex flex-col justify-between group';
+                    
+                    if (badge) {
+                        if (isCompleted) {
+                            badge.className = 'tier-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/35';
+                            badge.innerHTML = `<i class="fa-solid fa-check text-[10px]"></i> TIER 0${t} • COMPLETED`;
+                        } else {
+                            badge.className = 'tier-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-gold-400/15 text-gold-400 border border-gold-400/35';
+                            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse"></span> TIER 0${t} • AVAILABLE`;
+                        }
+                    }
+
+                    if (req) {
+                        req.className = 'tier-req text-[11px] font-mono text-emerald-400';
+                        req.innerText = isCompleted ? 'Unlocked & Verified' : 'Ready to Launch';
+                    }
+
+                    if (cta) {
+                        cta.className = 'tier-cta px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-gold-400 group-hover:bg-gold-100 text-slate-950 transition shadow-sm flex items-center gap-1.5';
+                        cta.innerHTML = `<span>${isCompleted ? 'Review Tier 0' + t : 'Enter Tier 0' + t}</span><i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>`;
+                    }
+                } else {
+                    card.className = 'overview-tier-card is-locked snap-start shrink-0 w-[84vw] sm:w-[360px] relative rounded-2xl p-5 sm:p-6 bg-slate-950/75 backdrop-blur-md border border-white/10 opacity-85 hover:opacity-95 transition-all duration-300 cursor-pointer flex flex-col justify-between select-none';
+                    if (badge) {
+                        badge.className = 'tier-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-900 text-slate-400 border border-white/10';
+                        badge.innerHTML = `<i class="fa-solid fa-lock text-gold-400/75 text-[10px]"></i> TIER 0${t} • LOCKED`;
+                    }
+                    if (req) {
+                        req.className = 'tier-req text-[11px] font-mono text-slate-500';
+                        req.innerText = `Requires Tier 0${t - 1}`;
+                    }
+                    if (cta) {
+                        cta.className = 'tier-cta px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-slate-900 text-slate-400 border border-white/10 flex items-center gap-1.5';
+                        cta.innerHTML = `<i class="fa-solid fa-lock text-[10px]"></i><span>Locked</span>`;
+                    }
+                }
+            });
+        }
+
         function openModal(key) {
             const data = modalData[key];
             if (!data) return;
@@ -1132,6 +1572,7 @@
 
         document.getElementById('lang-selector').addEventListener('change', (e) => {
             document.body.setAttribute('dir', e.target.value === 'ar' ? 'rtl' : 'ltr');
+            saveTamkeenState();
         });
 
         // --- TIER 1 ELEGANT SLIDER ENGINE ---
@@ -1148,33 +1589,31 @@
                 track.style.transform = `translateX(-${currentTier1Index * 100}%)`;
             }
 
-            // Update Top Segmented Tabs
             const tabs = document.querySelectorAll('.tier1-tab');
             tabs.forEach((tab, i) => {
                 if (i === currentTier1Index) {
-                    tab.className = 'tier1-tab flex-1 py-1.5 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30';
+                    tab.className = 'tier1-tab flex-1 py-2 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30';
                 } else {
-                    tab.className = 'tier1-tab flex-1 py-1.5 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white';
+                    tab.className = 'tier1-tab flex-1 py-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white';
                 }
             });
 
-            // Update Bottom Indicator Dots
             const dots = document.querySelectorAll('#tier1-dots button');
             dots.forEach((dot, i) => {
                 if (i === currentTier1Index) {
-                    dot.className = 'w-2.5 h-2.5 rounded-full bg-gold-400 transition-all';
+                    dot.className = 'w-3 h-3 rounded-full bg-gold-400 transition-all';
                 } else {
-                    dot.className = 'w-2 h-2 rounded-full bg-white/20 transition-all';
+                    dot.className = 'w-2.5 h-2.5 rounded-full bg-white/20 transition-all';
                 }
             });
 
-            // Sync Banner Step & Intra-Section Progress Bar for Tier 01
             if (currentActiveTier === 1) {
                 const stepEl = document.getElementById('dynamic-section-step');
                 const fillEl = document.getElementById('section-progress-fill');
                 if (stepEl) stepEl.innerText = `Module 1.${currentTier1Index + 1} / 1.3`;
                 if (fillEl) fillEl.style.width = `${((currentTier1Index + 1) / totalTier1Slides) * 100}%`;
             }
+            saveTamkeenState();
         }
 
         function moveTier1Slide(direction) {
@@ -1220,33 +1659,31 @@
                 track.style.transform = `translateX(-${currentTier3Index * 100}%)`;
             }
 
-            // Update Top Segmented Tabs
             const tabs = document.querySelectorAll('.tier3-tab');
             tabs.forEach((tab, i) => {
                 if (i === currentTier3Index) {
-                    tab.className = 'tier3-tab py-1.5 px-2 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30 truncate';
+                    tab.className = 'tier3-tab py-2 px-2 text-xs font-mono rounded-lg transition-all text-gold-400 bg-gold-400/10 font-bold border border-gold-400/30 truncate';
                 } else {
-                    tab.className = 'tier3-tab py-1.5 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate';
+                    tab.className = 'tier3-tab py-2 px-2 text-xs font-mono rounded-lg transition-all text-slate-400 hover:text-white truncate';
                 }
             });
 
-            // Update Bottom Indicator Dots
             const dots = document.querySelectorAll('#tier3-dots button');
             dots.forEach((dot, i) => {
                 if (i === currentTier3Index) {
-                    dot.className = 'w-2.5 h-2.5 rounded-full bg-gold-400 transition-all';
+                    dot.className = 'w-3 h-3 rounded-full bg-gold-400 transition-all';
                 } else {
-                    dot.className = 'w-2 h-2 rounded-full bg-white/20 transition-all';
+                    dot.className = 'w-2.5 h-2.5 rounded-full bg-white/20 transition-all';
                 }
             });
 
-            // Sync Banner Step & Intra-Section Progress Bar for Tier 03
             if (currentActiveTier === 3) {
                 const stepEl = document.getElementById('dynamic-section-step');
                 const fillEl = document.getElementById('section-progress-fill');
                 if (stepEl) stepEl.innerText = `Rule 3.${currentTier3Index + 1} / 3.4`;
                 if (fillEl) fillEl.style.width = `${((currentTier3Index + 1) / totalTier3Slides) * 100}%`;
             }
+            saveTamkeenState();
         }
 
         function moveTier3Slide(direction) {
@@ -1278,9 +1715,45 @@
             }, { passive: true });
         })();
 
-        // --- PROGRESSIVE STAGE ENGINE & LIFELINE ---
-        let maxUnlockedTier = 0;
-        let currentActiveTier = 0;
+        // --- PROGRESSIVE STAGE ENGINE & LOCALSTORAGE PERSISTENCE ---
+        const TAMKEEN_STORAGE_KEY = 'al_tamkeen_pathway_state_v1';
+
+        function loadTamkeenState() {
+            try {
+                const raw = localStorage.getItem(TAMKEEN_STORAGE_KEY);
+                if (!raw) return { maxUnlockedTier: 1, currentActiveTier: 0, lang: 'en', tier1Slide: 0, tier3Slide: 0 };
+                const parsed = JSON.parse(raw);
+                return {
+                    maxUnlockedTier: Math.min(4, Math.max(1, parseInt(parsed.maxUnlockedTier) || 1)),
+                    currentActiveTier: Math.min(4, Math.max(0, parseInt(parsed.currentActiveTier) || 0)),
+                    lang: parsed.lang === 'ar' ? 'ar' : 'en',
+                    tier1Slide: Math.min(2, Math.max(0, parseInt(parsed.tier1Slide) || 0)),
+                    tier3Slide: Math.min(3, Math.max(0, parseInt(parsed.tier3Slide) || 0))
+                };
+            } catch (e) {
+                return { maxUnlockedTier: 1, currentActiveTier: 0, lang: 'en', tier1Slide: 0, tier3Slide: 0 };
+            }
+        }
+
+        function saveTamkeenState() {
+            try {
+                const langEl = document.getElementById('lang-selector');
+                const state = {
+                    maxUnlockedTier,
+                    currentActiveTier,
+                    lang: langEl ? langEl.value : 'en',
+                    tier1Slide: currentTier1Index,
+                    tier3Slide: currentTier3Index
+                };
+                localStorage.setItem(TAMKEEN_STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                // Ignore storage quota or private-mode restrictions
+            }
+        }
+
+        const initialTamkeenState = loadTamkeenState();
+        let maxUnlockedTier = initialTamkeenState.maxUnlockedTier;
+        let currentActiveTier = initialTamkeenState.currentActiveTier;
 
         const sectionBannerData = [
             {
@@ -1318,30 +1791,28 @@
             const bannerIcon = document.getElementById('banner-icon');
 
             if (tierIndex === 0) {
-                // Overview Mode: Show Top Nav, place Status Banner beneath it
                 document.body.classList.remove('tier-mode');
                 if (mainNav) mainNav.classList.remove('nav-hidden');
                 if (statusBanner) {
                     statusBanner.classList.remove('top-0');
-                    statusBanner.classList.add('top-[48px]');
+                    statusBanner.classList.add('top-[50px]');
                 }
                 if (mainContainer) {
-                    mainContainer.classList.remove('pt-[40px]');
-                    mainContainer.classList.add('pt-[86px]');
+                    mainContainer.classList.remove('pt-[42px]');
+                    mainContainer.classList.add('pt-[90px]');
                 }
                 if (homeBtn) homeBtn.classList.add('hidden');
                 if (bannerIcon) bannerIcon.classList.remove('hidden');
             } else {
-                // Active Tier Mode (01-04): Slide Top Nav out of screen, move Banner to very top (top-0)
                 document.body.classList.add('tier-mode');
                 if (mainNav) mainNav.classList.add('nav-hidden');
                 if (statusBanner) {
-                    statusBanner.classList.remove('top-[48px]');
+                    statusBanner.classList.remove('top-[50px]');
                     statusBanner.classList.add('top-0');
                 }
                 if (mainContainer) {
-                    mainContainer.classList.remove('pt-[86px]');
-                    mainContainer.classList.add('pt-[40px]');
+                    mainContainer.classList.remove('pt-[90px]');
+                    mainContainer.classList.add('pt-[42px]');
                 }
                 if (homeBtn) homeBtn.classList.remove('hidden');
                 if (bannerIcon) bannerIcon.classList.add('hidden');
@@ -1371,21 +1842,21 @@
 
         function switchTier(tierIndex) {
             if (tierIndex > maxUnlockedTier) {
-                alert("Please complete or unlock preceding tiers before accessing this section.");
+                showTamkeenToast(`Tier 0${tierIndex} is locked. Complete Tier 0${tierIndex - 1} first.`);
                 return;
             }
 
             currentActiveTier = tierIndex;
 
-            // Hide all tier panels
             for (let i = 0; i <= 4; i++) {
                 const panel = document.getElementById(`tier-panel-${i}`);
                 if (panel) panel.classList.remove('active-tier');
             }
 
-            // Show selected panel
             const targetPanel = document.getElementById(`tier-panel-${tierIndex}`);
             if (targetPanel) {
+                // Force reflow so the entrance transition replays smoothly every time
+                void targetPanel.offsetWidth;
                 targetPanel.classList.add('active-tier');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
@@ -1394,22 +1865,30 @@
             updateLifelineUI(tierIndex);
             updateNavTitle(tierIndex);
             updateSidebarActive(tierIndex);
+            syncOverviewCardsUI();
+            renderTierProgressionDocks();
+            saveTamkeenState();
         }
 
         function unlockAndMoveNext(nextTierIndex) {
-            if (nextTierIndex === maxUnlockedTier + 1) {
-                maxUnlockedTier = nextTierIndex;
-                const nodeIds = ['node-hero', 'node-self', 'node-family', 'node-gov', 'node-sim'];
-                const targetNode = document.getElementById(nodeIds[nextTierIndex]);
-                if (targetNode) {
-                    targetNode.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-                
-                document.querySelectorAll(`.toc-btn[data-tier="${nextTierIndex}"]`).forEach(btn => {
-                    btn.classList.remove('opacity-60');
-                });
+            if (nextTierIndex > maxUnlockedTier) {
+                maxUnlockedTier = Math.min(4, nextTierIndex);
+                saveTamkeenState();
             }
             switchTier(nextTierIndex);
+        }
+
+        function resetTamkeenProgress() {
+            maxUnlockedTier = 1;
+            currentTier1Index = 0;
+            currentTier3Index = 0;
+            try {
+                localStorage.removeItem(TAMKEEN_STORAGE_KEY);
+            } catch (e) {}
+            goToTier1Slide(0);
+            goToTier3Slide(0);
+            switchTier(0);
+            showTamkeenToast('Pathway progress reset to Tier 01.');
         }
 
         function updateLifelineUI(activeIndex) {
@@ -1417,17 +1896,25 @@
             nodeIds.forEach((id, index) => {
                 const node = document.getElementById(id);
                 if (!node) return;
-                node.classList.remove('active', 'completed');
+                node.classList.remove('active', 'completed', 'unlocked', 'opacity-55', 'cursor-not-allowed');
+
+                if (index <= maxUnlockedTier) {
+                    node.classList.add('unlocked');
+                } else {
+                    node.classList.add('opacity-55', 'cursor-not-allowed');
+                }
+
                 if (index === activeIndex) {
                     node.classList.add('active');
-                } else if (index < activeIndex) {
+                } else if (index < maxUnlockedTier) {
                     node.classList.add('completed');
                 }
             });
 
             const beam = document.getElementById('lifeline-active-beam');
             if (beam) {
-                beam.style.width = `${(activeIndex / 4) * 100}%`;
+                const progressStep = Math.max(activeIndex, maxUnlockedTier - 1);
+                beam.style.width = `${(progressStep / 4) * 100}%`;
             }
             
             const pctElement = document.getElementById('scroll-percentage');
@@ -1439,6 +1926,24 @@
             buttons.forEach(btn => {
                 const tier = parseInt(btn.getAttribute('data-tier'));
                 btn.classList.remove('active');
+
+                if (tier > 0) {
+                    const icon = btn.querySelector('.toc-status-icon');
+                    if (tier <= maxUnlockedTier) {
+                        btn.classList.remove('opacity-60');
+                        if (icon) {
+                            icon.className = tier < maxUnlockedTier
+                                ? 'toc-status-icon fa-solid fa-check text-[10px] text-emerald-400'
+                                : 'toc-status-icon fa-solid fa-unlock text-[10px] text-gold-400';
+                        }
+                    } else {
+                        btn.classList.add('opacity-60');
+                        if (icon) {
+                            icon.className = 'toc-status-icon fa-solid fa-lock text-[10px] text-slate-500';
+                        }
+                    }
+                }
+
                 if (tier === activeIndex) {
                     btn.classList.add('active');
                 }
@@ -1464,7 +1969,19 @@
                 const pct = Math.min(100, Math.max(15, (winScroll / height) * 100));
                 fillEl.style.width = `${pct}%`;
             }
-        });
+        }, { passive: true });
+
+        // Hydrate persisted state on initial load
+        (function hydrateTamkeenApp() {
+            const langEl = document.getElementById('lang-selector');
+            if (langEl && initialTamkeenState.lang) {
+                langEl.value = initialTamkeenState.lang;
+                document.body.setAttribute('dir', initialTamkeenState.lang === 'ar' ? 'rtl' : 'ltr');
+            }
+            goToTier1Slide(initialTamkeenState.tier1Slide);
+            goToTier3Slide(initialTamkeenState.tier3Slide);
+            switchTier(initialTamkeenState.currentActiveTier <= maxUnlockedTier ? initialTamkeenState.currentActiveTier : 0);
+        })();
     </script>
 </body>
-                      </html>
+</html>
